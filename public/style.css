@@ -1,0 +1,261 @@
+/* Royal Flush — style de l'intérieur de la table */
+#game {
+  --felt: #08752f;
+  --felt-deep: #064b29;
+  --table-gold: #d3b86e;
+}
+
+#game .table {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: clamp(510px, 68dvh, 760px);
+  min-height: 510px;
+  margin: 8px auto 12px;
+  overflow: hidden;
+  border: 10px solid #111d19;
+  border-radius: 48% / 25%;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(37, 183, 76, .2), transparent 58%),
+    radial-gradient(ellipse at center, #0b8138 0%, #087332 56%, #07542d 100%);
+  box-shadow:
+    0 0 0 4px #335741,
+    0 0 0 8px #111a17,
+    0 18px 38px rgba(0, 0, 0, .48),
+    inset 0 0 30px rgba(0, 0, 0, .28);
+}
+
+#game .table::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 14px;
+  border: 2px solid rgba(226, 242, 197, .16);
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 20% 20%, transparent 0 25px, rgba(220,255,225,.035) 26px 28px, transparent 29px),
+    radial-gradient(circle at 80% 75%, transparent 0 33px, rgba(220,255,225,.03) 34px 36px, transparent 37px);
+  pointer-events: none;
+}
+
+#game .table::after {
+  content: "♠";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(209, 241, 202, .13);
+  font-size: clamp(92px, 22vw, 150px);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Seats follow the oval layout in the reference image. s0 is the local player. */
+#game #seats {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+#game .seat {
+  position: absolute;
+  width: clamp(68px, 19vw, 92px);
+  min-height: 105px;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  transition: opacity .2s ease, filter .2s ease;
+}
+
+#game .s0 { left: 50%; top: 88%; }
+#game .s1 { left: 15%; top: 72%; }
+#game .s2 { left: 13%; top: 51%; }
+#game .s3 { left: 15%; top: 30%; }
+#game .s4 { left: 35%; top: 12%; }
+#game .s5 { left: 65%; top: 12%; }
+#game .s6 { left: 87%; top: 30%; }
+#game .s7 { left: 87%; top: 51%; }
+#game .s8 { left: 85%; top: 72%; }
+
+#game .seat .avatar {
+  position: relative;
+  z-index: 2;
+  width: 43px;
+  height: 43px;
+  margin: 0 auto -2px;
+  border: 3px solid rgba(255,255,255,.82);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #d7c6a9, #817e71);
+  color: #172019;
+  font-size: 17px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.35);
+}
+
+#game .seat .seat-stars {
+  position: relative;
+  z-index: 3;
+  height: 15px;
+  margin: -1px 0 -3px;
+  color: #fff;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 0;
+  text-shadow: 0 1px 3px #000;
+  white-space: nowrap;
+}
+
+#game .seat .box {
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 5px;
+  background: rgba(0, 28, 17, .9);
+  box-shadow: 0 4px 10px rgba(0,0,0,.23);
+}
+
+#game .seat-name {
+  min-height: 24px;
+  padding: 3px 2px;
+  background: rgba(9, 47, 29, .96);
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#game .seat-name small {
+  display: none;
+}
+
+#game .stack {
+  min-height: 25px;
+  padding: 4px 2px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+#game .seat .muted {
+  color: #e4d59d;
+  font-size: 9px;
+}
+
+#game .seat-cards {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  height: 34px;
+  margin: 0 0 2px;
+}
+
+#game .seat-cards .playing {
+  width: 23px;
+  height: 32px;
+  border: 1px solid #dedbd4;
+  border-radius: 4px;
+  font-size: 11px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.3);
+}
+
+#game .seat-cards .playing.back {
+  border-color: rgba(255,255,255,.55);
+  background: repeating-linear-gradient(45deg, #284f7c 0 3px, #19375e 3px 6px);
+}
+
+#game .seat.active .box {
+  outline: 2px solid var(--table-gold);
+  box-shadow: 0 0 14px rgba(237,199,101,.65);
+}
+
+#game .seat.folded {
+  opacity: .48;
+  filter: grayscale(.8);
+}
+
+/* Cartes communes, pot et indicateur de combinaison */
+#game .center {
+  position: absolute;
+  z-index: 2;
+  top: 47%;
+  left: 50%;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+#game .community {
+  display: flex;
+  min-height: 58px;
+  justify-content: center;
+  gap: 5px;
+  margin: 0 0 10px;
+}
+
+#game .community .playing,
+#game .community .empty {
+  display: grid;
+  width: clamp(37px, 9.5vw, 49px);
+  height: clamp(54px, 14vw, 68px);
+  place-items: center;
+  border: 2px solid #f4f1e9;
+  border-radius: 6px;
+  background: linear-gradient(145deg, #fff, #eeeae2);
+  color: #121212;
+  font-size: clamp(16px, 4vw, 21px);
+  font-weight: 900;
+  box-shadow: 0 4px 9px rgba(0,0,0,.25);
+}
+
+#game .community .playing.red { color: #db1732; }
+
+#game .community .empty {
+  border: 1px dashed rgba(255,255,255,.32);
+  background: rgba(0,0,0,.08);
+  box-shadow: none;
+}
+
+#game .pot {
+  min-width: 116px;
+  padding: 5px 15px;
+  border: 1px solid rgba(239,210,111,.55);
+  border-radius: 30px;
+  background: rgba(0, 39, 20, .84);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 850;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+}
+
+#game .pot small { color: var(--table-gold); font-size: 10px; }
+#game .pot-label { margin-top: 3px; color: rgba(255,255,255,.7); font-size: 9px; letter-spacing: 1.5px; }
+
+/* Mise et commandes restent utilisables sur téléphone */
+#game .controls {
+  border-color: rgba(255,255,255,.12);
+  background: linear-gradient(145deg, rgba(10,25,31,.97), rgba(7,19,24,.98));
+  box-shadow: 0 10px 24px rgba(0,0,0,.26);
+}
+
+#game .controls .actions button {
+  min-height: 42px;
+  border-radius: 10px;
+  font-weight: 800;
+}
+
+@media (max-width: 370px) {
+  #game .table { height: 62dvh; min-height: 470px; }
+  #game .seat { width: 62px; }
+  #game .seat .avatar { width: 36px; height: 36px; font-size: 14px; }
+  #game .seat-stars { font-size: 10px; }
+  #game .seat-name { font-size: 9px; }
+  #game .stack { font-size: 10px; }
+  #game .seat-cards .playing { width: 20px; height: 28px; font-size: 9px; }
+}
+
+@media (max-height: 700px) {
+  #game .table { height: 58dvh; min-height: 390px; }
+}
