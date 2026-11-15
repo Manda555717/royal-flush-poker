@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <title>Royal Flush — Table personnalisée</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #07111f; }
+    #game-frame { display: block; width: 100%; height: 100%; border: 0; }
+    #load-error { position: fixed; z-index: 10; inset: 12px 12px auto; padding: 12px; border-radius: 10px; background: #5b1717; color: white; font: 14px/1.4 system-ui, sans-serif; }
+    #load-error[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <div id="load-error" role="alert" hidden></div>
+  <iframe id="game-frame" src="/" title="Table de poker Royal Flush"></iframe>
+
+  <script>
+    const frame = document.getElementById('game-frame');
+    const errorBox = document.getElementById('load-error');
+
+    frame.addEventListener('load', async () => {
+      try {
+        const doc = frame.contentDocument;
+        if (!doc) throw new Error('La page de jeu doit être servie depuis le même site.');
+
+        const [cssResponse, jsResponse] = await Promise.all([
+          fetch('/style.css'),
+          fetch('/table.js')
+        ]);
+        if (!cssResponse.ok || !jsResponse.ok) {
+          throw new Error('Impossible de charger public/style.css ou public/table.js.');
+        }
+
+        const css = await cssResponse.text();
+        const js = await jsResponse.text();
+
+        // Injecte le style après le CSS intégré à l'application pour qu'il le remplace.
+        const style = doc.createElement('style');
+        style.dataset.pokerTableTheme = 'true';
+        style.textContent = css;
+        doc.head.appendChild(style);
+
+        // Exécute table.js dans le contexte de la page de jeu (où #seats existe).
+        const script = doc.createElement('script');
+        script.textContent = js;
+        doc.body.appendChild(script);
+      } catch (error) {
+        errorBox.hidden = false;
+        errorBox.textContent = `Erreur de chargement : ${error.message}`;
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
